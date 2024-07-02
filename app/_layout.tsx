@@ -16,6 +16,11 @@ import { config } from "@tamagui/config/v3";
 
 const tamaguiConfig = createTamagui(config);
 
+type Conf = typeof tamaguiConfig;
+declare module "tamagui" {
+  interface TamaguiCustomConfig extends Conf {}
+}
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -57,7 +62,7 @@ function RootLayoutNav() {
   // const colorScheme = useColorScheme();
 
   return (
-    <TamaguiProvider>
+    <TamaguiProvider config={tamaguiConfig}>
       <SafeAreaView style={{ flex: 1 }}>
         <Stack>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
