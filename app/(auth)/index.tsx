@@ -11,7 +11,6 @@ export default function Index() {
   }, [navigation]);
 
   return (
-    // <View p={10} bg="pink" flex={1} justifyContent="center">
     <View
       style={{
         padding: 10,
@@ -30,7 +29,6 @@ export default function Index() {
         width={300}
         height={300}
       />
-      {/* <Text color="red">Hello there my friend</Text> */}
       <Button>Log In</Button>
     </View>
   );
