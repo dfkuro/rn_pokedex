@@ -1,4 +1,3 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { TamaguiProvider, createTamagui } from "tamagui";
 import { config } from "@tamagui/config/v3";
 import {
