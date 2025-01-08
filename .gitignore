@@ -39,6 +39,3 @@ yarn-error.*
 
 expo-env.d.ts
 # @end expo-cli
-
-# Temporal full android ignored (no native code need right now)
-android
