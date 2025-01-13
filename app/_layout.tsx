@@ -28,6 +28,8 @@ export default function RootLayoutNav() {
       // This words for expo
       await Clipboard.setStringAsync(text)
       return true
+    } catch {
+      return true
     }
   }
 
@@ -54,7 +56,7 @@ export default function RootLayoutNav() {
           </Stack>
         </ThemeProvider>
       </TamaguiProvider>
-      <DevToolsBubble />
+      <DevToolsBubble onCopy={onCopy} />
     </QueryClientProvider>
   );
 }
