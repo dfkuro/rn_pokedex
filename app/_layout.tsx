@@ -1,3 +1,6 @@
+import { DevToolsBubble } from "react-native-react-query-devtools";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import * as  Clipboard from 'expo-clipboard';
 import {
   DarkTheme,
   DefaultTheme,
@@ -18,6 +21,15 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const queryClient = new QueryClient();
+
+  const onCopy = async (text: string) => {
+    try {
+      // This words for expo
+      await Clipboard.setStringAsync(text)
+      return true
+    }
+  }
 
   const [loaded] = useFonts({
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
@@ -33,13 +45,16 @@ export default function RootLayoutNav() {
 
 
   return (
-    <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        </Stack>
-      </ThemeProvider>
-    </TamaguiProvider>
+    <QueryClientProvider client={queryClient}>
+      <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          </Stack>
+        </ThemeProvider>
+      </TamaguiProvider>
+      <DevToolsBubble />
+    </QueryClientProvider>
   );
 }
