@@ -1,7 +1,5 @@
-// import EditScreenInfo from "@/components/EditScreenInfo";
 import { useQuery } from '@tanstack/react-query';
-import { StyleSheet } from "react-native";
-import { View, Text, Button, YStack, XStack, Theme, H5 } from 'tamagui'
+import { StyleSheet, View, Text } from "react-native";
 import { fetchPokemons } from '@/lib/api'
 
 
@@ -20,16 +18,14 @@ export default function TabOneScreen() {
     url: string
   }
 
-  return <XStack fullscreen padding="$size.xl" alignSelf="center" backgroundColor="$bg">
-    <YStack>
-      <Text style={{ fontSize: 22 }}>Hello</Text>
-      <View style={{ paddingVertical: 20 }}>
-        {data?.results.map((item: dataPokemon) => {
-          return <Text key={item.name}>{item.name}</Text>
-        })}
-      </View>
-    </YStack>
-  </XStack>
+  return <View style={{ flex: 1, height: '200', padding: 10 }}>
+    <Text style={{ fontSize: 22 }}>Hello</Text>
+    <View style={{ paddingVertical: 20 }}>
+      {data?.results.map((item: dataPokemon) => {
+        return <Text style={styles.textStyle} key={item.name}>{item.name}</Text>
+      })}
+    </View>
+  </View>
 
 }
 
@@ -40,5 +36,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 200,
     backgroundColor: 'pink'
+  },
+  textStyle: {
+    color: 'white'
   }
 });
