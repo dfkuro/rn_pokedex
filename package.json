@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "android-build": "bunx expo run:android"
   },
   "jest": {
     "preset": "jest-expo"
@@ -22,6 +23,7 @@
     "expo-clipboard": "~7.0.1",
     "expo-dev-client": "~5.0.7",
     "expo-font": "~13.0.2",
+    "expo-image": "~2.0.4",
     "expo-linking": "~7.0.3",
     "expo-router": "~4.0.15",
     "expo-splash-screen": "~0.29.18",

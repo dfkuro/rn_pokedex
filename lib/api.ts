@@ -5,8 +5,8 @@ export const fetchPokemons = async () => {
   return res
 }
 
-export const fetchPokemon = async (pokemonNumber: number) => {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`).then((res) =>
+export const fetchPokemon = async (number: number) => {
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${number}`).then((res) =>
     res.json()
   )
   return res
