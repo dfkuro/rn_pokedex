@@ -1,16 +1,28 @@
-import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { StyleSheet, View, Text } from "react-native";
-import { fetchPokemon } from '@/lib/api'
-// import { Image } from 'expo-image'
-
-const tilListPokemons = 151;
+import { StyleSheet, View, Text, FlatList, ListRenderItem } from "react-native";
+import { fetchPokemons } from '@/lib/pokeapi'
+import { Image } from 'expo-image'
 
 interface Pokemon {
   /** The pokemon name */
   name: string;
   /** Url string to get detailed data from that pokemon */
   url: string;
+  /** Details for the pokemon */
+  details: {
+    id: number;
+    base_experience: number;
+    height: number;
+    weight: number;
+    sprites: {
+      front_default: string;
+      other: {
+        'official-artwork': {
+          front_default: string;
+        }
+      }
+    }
+  };
 }
 
 interface PokemonApiResponse {
@@ -22,33 +34,61 @@ interface PokemonApiResponse {
   results: Pokemon[];
 }
 
-interface PokemonDetails {
-  name: string;
-  sprites: {
-    front_default: string;
-  }
+interface ItemType {
+  index: number;
+  item: Pokemon;
+  separators: {}
 }
 
-export default function TabOneScreen() {
-  const [pokemons, setPokemons] = useState<PokemonDetails[]>([]);
 
-  const { data: pokemonDetails } = useQuery<PokemonApiResponse>({
+export default function TabOneScreen() {
+  const blurhash =
+    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
+  const { data, isLoading, error } = useQuery<PokemonApiResponse>({
     queryKey: ['pokemons'],
-    queryFn: () => fetchPokemon(1),
+    queryFn: () => fetchPokemons(7),
     // suspense: true,
     staleTime: 5 * 1000
   })
+  if (isLoading) return <> <Text>is isLoading</Text> </>
+  if (error) return <Text>Error</Text>
+
+  const PokemonItem = ({ listElement }: { listElement: ItemType }) => {
+    const { item: pokemon } = listElement
+    return <View
+      key={pokemon.name}
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Image
+        style={styles.image}
+        placeholder={blurhash}
+        contentFit="cover"
+        transition={1000}
+        source={pokemon.details.sprites.other['official-artwork'].front_default}
+      />
+      <Text style={styles.textStyle}>{pokemon.name}</Text>
+    </View>
+  }
 
 
+  const renderItem: ListRenderItem<Pokemon> = (item) => <PokemonItem listElement={item} />
   return <View style={{ flex: 1, padding: 10 }}>
-    <Text style={{ fontSize: 22 }}>Hello</Text>
-    <View style={{ paddingVertical: 20 }}>
-      {/* {pokemons?.map((item: Pokemon) => { */}
-      {/*   return <View key={item.name}> *
-      {/*     {/* <Image source={`item.`} /> */}
-      {/*     <Text style={styles.textStyle}>{item.name}</Text> */}
-      {/*   </View> */}
-      {/* })} */}
+    <View style={{ paddingVertical: 20 }} >
+      <FlatList<Pokemon>
+        scrollEnabled
+        numColumns={5}
+        columnWrapperStyle={{
+          justifyContent: "space-between"
+        }}
+        data={data?.results}
+        renderItem={renderItem}
+        keyExtractor={item => item.name}
+      />
     </View>
   </View>
 
@@ -63,6 +103,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink'
   },
   textStyle: {
-    color: 'white'
+    color: 'white',
+    textAlign: 'center'
+  },
+  image: {
+    flex: 1,
+    width: 70,
+    height: 70,
+    backgroundColor: '#0553'
   }
 });
