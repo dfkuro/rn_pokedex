@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { StyleSheet, View, Text, FlatList, ListRenderItem } from "react-native";
+import { FlashList } from '@shopify/flash-list';
+import { StyleSheet, View, Text } from "react-native";
 import { fetchPokemons } from '@/lib/pokeapi'
 import { Image } from 'expo-image'
 
@@ -34,31 +35,25 @@ interface PokemonApiResponse {
   results: Pokemon[];
 }
 
-interface ItemType {
-  index: number;
-  item: Pokemon;
-  separators: {}
-}
-
-
 export default function TabOneScreen() {
   const blurhash =
     '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   const { data, isLoading, error } = useQuery<PokemonApiResponse>({
     queryKey: ['pokemons'],
-    queryFn: () => fetchPokemons(7),
+    queryFn: () => fetchPokemons(100),
     // suspense: true,
     staleTime: 5 * 1000
   })
-  if (isLoading) return <> <Text>is isLoading</Text> </>
+
+  if (isLoading) return <Text>is isLoading</Text>
   if (error) return <Text>Error</Text>
 
-  const PokemonItem = ({ listElement }: { listElement: ItemType }) => {
-    const { item: pokemon } = listElement
+  const PokemonItem = ({ pokemon }: { pokemon: Pokemon }) => {
     return <View
       key={pokemon.name}
       style={{
+        width: 100,
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
@@ -76,22 +71,20 @@ export default function TabOneScreen() {
   }
 
 
-  const renderItem: ListRenderItem<Pokemon> = (item) => <PokemonItem listElement={item} />
+  const renderItem = ({ item }: { item: Pokemon }) => <PokemonItem pokemon={item} />
+
   return <View style={{ flex: 1, padding: 10 }}>
-    <View style={{ paddingVertical: 20 }} >
-      <FlatList<Pokemon>
+    <View style={{ paddingVertical: 20, flex: 1 }}>
+      <FlashList
         scrollEnabled
-        numColumns={5}
-        columnWrapperStyle={{
-          justifyContent: "space-between"
-        }}
+        numColumns={3}
         data={data?.results}
         renderItem={renderItem}
         keyExtractor={item => item.name}
+        estimatedItemSize={200}
       />
     </View>
   </View>
-
 }
 
 const styles = StyleSheet.create({
@@ -108,8 +101,8 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    width: 70,
-    height: 70,
+    width: 95,
+    height: 95,
     backgroundColor: '#0553'
   }
 });
