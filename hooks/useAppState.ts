@@ -10,4 +10,3 @@ export function useAppState(onChange: (status: AppStateStatus) => void) {
     }
   }, [onChange])
 }
-

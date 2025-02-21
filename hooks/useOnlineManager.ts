@@ -9,12 +9,9 @@ export function useOnlineManager() {
     if (Platform.OS !== 'web') {
       return NetInfo.addEventListener((state) => {
         onlineManager.setOnline(
-          state.isConnected != null &&
-          state.isConnected &&
-          Boolean(state.isInternetReachable),
+          state.isConnected != null && state.isConnected && Boolean(state.isInternetReachable),
         )
       })
     }
   }, [])
 }
-

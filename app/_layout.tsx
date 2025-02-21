@@ -1,26 +1,21 @@
-import { DevToolsBubble } from "react-native-react-query-devtools";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import * as  Clipboard from 'expo-clipboard';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DevToolsBubble } from 'react-native-react-query-devtools'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import * as Clipboard from 'expo-clipboard'
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useColorScheme } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import "react-native-reanimated";
+import { useFonts } from 'expo-font'
+import { Stack } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
+import { useEffect } from 'react'
+import 'react-native-reanimated'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const queryClient = new QueryClient();
+  const colorScheme = useColorScheme()
+  const queryClient = new QueryClient()
 
   const onCopy = async (text: string) => {
     try {
@@ -33,14 +28,14 @@ export default function RootLayoutNav() {
   }
 
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  })
 
   useEffect(() => {
-    if (loaded) SplashScreen.hideAsync();
-  }, [loaded]);
+    if (loaded) SplashScreen.hideAsync()
+  }, [loaded])
 
-  if (!loaded) return null;
+  if (!loaded) return null
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -48,11 +43,11 @@ export default function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
         <StatusBar style={colorScheme || 'dark'} />
       </ThemeProvider>
       <DevToolsBubble onCopy={onCopy} />
     </QueryClientProvider>
-  );
+  )
 }
