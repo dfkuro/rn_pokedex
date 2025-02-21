@@ -6,16 +6,18 @@ export async function fetchPokemons(limit: number = 50) {
   // console.log(data)
   data.results = await Promise.all(
     data.results.map(async (item: any) => {
-      const pokemonNumber = item.url.split('/').reverse()[1];
+      const pokemonNumber = item.url.split('/').reverse()[1]
 
       const pokemonDetails = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`)
       item.details = await pokemonDetails.json()
 
-      const pokemonSpecie = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber}`)
+      const pokemonSpecie = await fetch(
+        `https://pokeapi.co/api/v2/pokemon-species/${pokemonNumber}`,
+      )
       item.specie = await pokemonSpecie.json()
 
       return item
-    })
+    }),
   )
   return data
 }
