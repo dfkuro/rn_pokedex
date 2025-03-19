@@ -1,7 +1,7 @@
 import React from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Link, Tabs } from 'expo-router'
-import { Pressable } from 'react-native'
+import { Pressable, Image } from 'react-native'
 
 import Colors from '@/constants/Colors'
 import { useColorScheme } from '@/components/useColorScheme'
@@ -11,8 +11,24 @@ import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name']
   color: string
+  type: string
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />
+  let barIcon = 'https://images.icon-icons.com/851/PNG/512/snorlax_icon-icons.com_67505.png'
+  if (props.type === 'pokedex')
+    barIcon = 'https://static.wikia.nocookie.net/monster-master/images/6/63/Main1.png'
+
+  return (
+    <Image
+      source={{
+        uri: barIcon,
+      }}
+      height={32}
+      width={32}
+      resizeMode="center"
+    />
+  )
+
+  // return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />
 }
 
 export default function TabLayout() {
@@ -30,7 +46,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Pokedex',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} type="pokedex" />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -50,7 +66,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
+          title: 'About',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
