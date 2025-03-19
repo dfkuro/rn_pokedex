@@ -1,9 +1,9 @@
 /** Just brings in the pokemon data */
-export async function fetchPokemons(limit: number = 50) {
+export async function fetchPokemons(limit: number = 50, offset: number = 25) {
   if (limit > 100) limit = 100
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}`)
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`)
   const data = await response.json()
-  // console.log(data)
+
   data.results = await Promise.all(
     data.results.map(async (item: any) => {
       const pokemonNumber = item.url.split('/').reverse()[1]

@@ -1,8 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
+import { StyleSheet, View, Text, ActivityIndicator } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
-import { StyleSheet, View, Text } from 'react-native'
-import { fetchPokemons } from '@/lib/pokeapi'
-import { Image } from 'expo-image'
+import { useInfinitePokemons } from '@/hooks/useInfinitePokemons'
+import PokemonItem from '@/components/PokemonItem'
 
 interface Pokemon {
   /** The pokemon name */
@@ -26,52 +25,15 @@ interface Pokemon {
   }
 }
 
-interface PokemonApiResponse {
-  /** Total pokemons */
-  count: number
-  next: string
-  previous: string | null
-  /** Array of pokemons */
-  results: Pokemon[]
-}
-
 export default function TabOneScreen() {
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, isLoading, isError } =
+    useInfinitePokemons()
 
-  const { data, isLoading, error } = useQuery<PokemonApiResponse>({
-    queryKey: ['pokemons'],
-    queryFn: () => fetchPokemons(100),
-    // suspense: true,
-    staleTime: 5 * 1000,
-  })
+  // Flat data for an unique array
+  const allPokemons = data?.pages.flatMap((page) => page.results) ?? []
 
-  if (isLoading) return <Text>is isLoading</Text>
-  if (error) return <Text>Error</Text>
-
-  const PokemonItem = ({ pokemon }: { pokemon: Pokemon }) => {
-    return (
-      <View
-        key={pokemon.name}
-        style={{
-          width: 100,
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Image
-          style={styles.image}
-          placeholder={blurhash}
-          contentFit="cover"
-          transition={1000}
-          source={pokemon.details.sprites.other['official-artwork'].front_default}
-        />
-        <Text style={styles.textStyle}>{pokemon.name}</Text>
-      </View>
-    )
-  }
-
-  const renderItem = ({ item }: { item: Pokemon }) => <PokemonItem pokemon={item} />
+  if (isError) return <Text>Error al cargar los pokemons</Text>
+  if (isLoading) return <ActivityIndicator size="large" />
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
@@ -79,15 +41,28 @@ export default function TabOneScreen() {
         <FlashList
           scrollEnabled
           numColumns={3}
-          data={data?.results}
+          data={allPokemons}
           renderItem={renderItem}
           keyExtractor={(item) => item.name}
           estimatedItemSize={200}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) fetchNextPage()
+          }}
+          ListFooterComponent={() =>
+            isFetchingNextPage ? (
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <ActivityIndicator size="large" />
+              </View>
+            ) : null
+          }
         />
       </View>
     </View>
   )
 }
+
+const renderItem = ({ item }: { item: Pokemon }) => <PokemonItem pokemon={item} />
 
 const styles = StyleSheet.create({
   container: {
@@ -96,15 +71,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 200,
     backgroundColor: 'pink',
-  },
-  textStyle: {
-    color: 'white',
-    textAlign: 'center',
-  },
-  image: {
-    flex: 1,
-    width: 95,
-    height: 95,
-    backgroundColor: '#0553',
   },
 })
