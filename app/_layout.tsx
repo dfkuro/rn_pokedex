@@ -2,7 +2,7 @@ import { DevToolsBubble } from 'react-native-react-query-devtools'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import * as Clipboard from 'expo-clipboard'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
-import { useColorScheme } from 'react-native'
+import { useColorScheme, Platform } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
@@ -43,9 +43,16 @@ export default function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          <Stack.Screen
+            name="modal"
+            options={{
+              presentation: 'modal',
+              headerTitle: 'Pokedex Info',
+            }}
+          />
         </Stack>
-        <StatusBar style={colorScheme || 'dark'} />
+
+        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       </ThemeProvider>
       <DevToolsBubble onCopy={onCopy} />
     </QueryClientProvider>
