@@ -52,9 +52,10 @@ const PokemonItem = ({ pokemon }: { pokemon: Pokemon }) => {
 const styles = StyleSheet.create({
   image: {
     flex: 1,
-    width: 95,
-    height: 95,
+    width: 90,
+    height: 90,
     backgroundColor: '#0553',
+    borderRadius: 10,
   },
   textStyle: {
     color: 'white',
